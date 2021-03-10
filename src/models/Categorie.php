@@ -11,7 +11,7 @@ class Categorie extends \Illuminate\Database\Eloquent\Model
     public $timestamps = false;
 
     public function annonces() {
-        return $this->belongsToMany ("model\Annonce", "appartenanceCategorieAnnonce", "categorie_id", "annonce_id");
+        return $this->belongsToMany ("models\Annonce", "appartenanceCategorieAnnonce", "categorie_id", "annonce_id");
     }
 
 }

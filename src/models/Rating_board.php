@@ -4,13 +4,11 @@
 namespace bd\models;
 
 
-class Photo extends \Illuminate\Database\Eloquent\Model
+class Rating_board extends \Illuminate\Database\Eloquent\Model
 {
 
-    protected $table = 'photo';
+    protected $table = 'rating_board';
     protected $primaryKey = 'id';
     public $timestamps = false;
-
-
 
 }

@@ -1,16 +1,11 @@
 <?php
 
-
 namespace bd\models;
 
-
-class Photo extends \Illuminate\Database\Eloquent\Model
+class Character extends \Illuminate\Database\Eloquent\Model
 {
-
-    protected $table = 'photo';
+    protected $table = 'character';
     protected $primaryKey = 'id';
     public $timestamps = false;
-
-
 
 }
