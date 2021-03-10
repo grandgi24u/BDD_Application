@@ -36,6 +36,15 @@ Question 4
 $annonce = Annonce::where('id', '=', 22)->first()
 $photo = new Photo();
 $photo->save();
-$annonce->hasMany('\TD2\modele\Photo', 'annonce_id')->save($photo)
+$annonce->hasMany('\TD2\modele\Photo', 'annonce_id')->save($photo);
 
 Question 5
+$ca = new CategorieAnnonce();
+$ca->id_annonce=22;
+$ca->id_categorie=42;
+$ca->save();
+
+$ca = new CategorieAnnonce();
+$ca->id_annonce=22;
+$ca->id_categorie=73;
+$ca->save();
