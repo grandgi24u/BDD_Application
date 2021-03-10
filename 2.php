@@ -15,7 +15,7 @@ $db->addConnection(parse_ini_file('src/conf/conf.ini'));
 $db->setAsGlobal();
 $db->bootEloquent();
 
-/**
+
 // afficher (name , deck) les personnages du jeu 12342
 $quest1 = \bd\models\Game::find(12342);
 $quest1 = $quest1->characters;
@@ -48,7 +48,7 @@ foreach ($quest3 as $q) {
     foreach ($jeux as $j) {
         echo $j->name . "<br>";
     }
-}*/
+}
 
 //le rating initial (indiquer le rating board) des jeux dont le nom contient Mario
 $quest4 = \bd\models\Game::where('name', 'LIKE', '%Mario%')->get();
@@ -63,7 +63,6 @@ foreach ($quest4 as $q) {
     }
 }
 
-/**
 //les jeux dont le nom débute par Mario et ayant plus de 3 personnages
 $quest5 = \bd\models\Game::where('name', 'LIKE', 'Mario%')->get();
 
@@ -123,11 +122,13 @@ foreach ($game as $g) {
 }
 
 //ajouter un nouveau genre de jeu, et l'associer aux jeux 12, 56, 12, 345
+echo "<h1>Question 9</h1><br>";
+
 $genre = new Genre();
 $genre->name = "Un super genre";
 $genre->save();
 
-$genre->games()->attach([12,56,345]);*/
+$genre->games()->attach([12,56,345]);
 
 
 
