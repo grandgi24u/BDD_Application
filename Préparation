@@ -35,3 +35,6 @@ Cela permet d'obtenir le log complet de toutes les requètes effectuer jusqu'à 
 élément inconnu avec la valeur que l'on leur donne et d'un temps d'execution.
 
 Q4
+
+Le problème du N+1 query est que est que dans un execution de requète Eloquent, pour si l'on veut parcourir une table à N tuple, nous allons effectuer N requètes, mais juste
+avant, il faudra tous les récupérer, ce qui fera une requète suplémentaire, et on se retrouve avec N+1 requètes.
