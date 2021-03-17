@@ -13,3 +13,10 @@ echo "Ne rien faire pendant $time secondes\n";
 ?
 
 Q2
+
+Les index sont utilisés pour rechercher rapidement des lignes avec des valeurs de colonne spécifiques.
+Cela permet de ne à avoir à parcourir toutes les données et donc de trouvé la données chercé plus vite.
+
+La plupart des indices de MySQL ( PRIMARY KEY, UNIQUE, INDEXet FULLTEXT) sont stockés dans arbres-B qui est Une structure de données arborescente qui est couramment utilisée
+dans les index de base de données. La structure est maintenue triée à tout moment, ce qui permet une recherche rapide des correspondances exactes (opérateur égal) et des plages
+(par exemple, BETWEEN opérateurs supérieur à, inférieur à et ).
