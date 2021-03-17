@@ -20,3 +20,18 @@ Cela permet de ne à avoir à parcourir toutes les données et donc de trouvé l
 La plupart des indices de MySQL ( PRIMARY KEY, UNIQUE, INDEXet FULLTEXT) sont stockés dans arbres-B qui est Une structure de données arborescente qui est couramment utilisée
 dans les index de base de données. La structure est maintenue triée à tout moment, ce qui permet une recherche rapide des correspondances exactes (opérateur égal) et des plages
 (par exemple, BETWEEN opérateurs supérieur à, inférieur à et ).
+
+Q3
+
+Afin de pouvoir utiliser le log de requètes avec Eloquent, il faut l'activer avec la ligne:
+
+DB::connection()->enableQueryLog();
+
+Ce qui permet de récupérer le log de requète avec:
+
+DB::getQueryLog()
+
+Cela permet d'obtenir le log complet de toutes les requètes effectuer jusqu'à présent, et dans le log, chauqe requète est composé d'une requète, d'un bindings correspondant au
+élément inconnu avec la valeur que l'on leur donne et d'un temps d'execution.
+
+Q4
