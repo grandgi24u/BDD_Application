@@ -1,1 +1,15 @@
+Q1
 
+<?php
+$time_start = microtime(true);
+
+// Attend pendant un moment
+usleep(100);
+
+$time_end = microtime(true);
+$time = $time_end - $time_start;
+
+echo "Ne rien faire pendant $time secondes\n";
+?
+
+Q2
