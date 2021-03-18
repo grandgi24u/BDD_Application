@@ -1,0 +1,19 @@
+
+Question 1 :
+
+Faker s'installe grâce a composer.
+
+Code : 
+
+composer require fzaninotto/faker
+
+
+Question 2 :
+
+$faker = new Faker\Generator();
+$faker->addProvider(new Faker\Provider\en_US\Address($faker));
+
+
+Question 3 :
+
+echo year($max = 'now') . "/" . month($max = 'now')  . "/" . dayOfMonth($max = 'now') . " (" . time($format = 'H:i', $max = 'now') . ")"; 
