@@ -17,4 +17,5 @@ $faker->address()
 
 Question 3 :
 
-echo year($max = 'now') . "/" . month($max = 'now')  . "/" . dayOfMonth($max = 'now') . " (" . time($format = 'H:i', $max = 'now') . ")"; 
+echo year($max = 'now') . "/" . month($max = 'now')  . "/" . dayOfMonth($max = 'now') . " (" . time($format = 'H:i', $max = 'now') . ")";
+//echo date("Y/m/d (H:i)")
