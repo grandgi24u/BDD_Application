@@ -12,6 +12,7 @@ Question 2 :
 
 $faker = new Faker\Generator();
 $faker->addProvider(new Faker\Provider\en_US\Address($faker));
+$faker->address()
 
 
 Question 3 :
