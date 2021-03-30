@@ -1,11 +1,15 @@
 1. 
 - Quand c'est un tableau ou les valeurs sont associer a un "nom", cela retourn un objet
 - Quand le tableau est classique, cela retourne un tableau
+- flags JSON_FORCE_OBJECT
+
+/!\ SLIM 3 /!\
 
 2. 
-- Données dans l'url : $app->request->get();
-- Pour les données dans le corps de la requête : $app->request->post();
+- Données dans l'url : $request->getQueryParams();
+			$request->getQueryParam($key, $default=null);
+- Pour les données dans le corps de la requête : $request->getParsedBody();
 
 3.
-- Le code de retour de la réponse (200, 404, 401 …) : $app->response->setStatus(302);
-- Un header dans la réponse : $app->response->headers->set('Content-type', 'application/json');
+- Le code de retour de la réponse (200, 404, 401 …) : $newResponse = $response->withStatus(302);
+- Un header dans la réponse : $newRespnse = $response->withHeader('Content-type', 'application/json');
