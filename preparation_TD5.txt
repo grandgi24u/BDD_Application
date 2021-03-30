@@ -3,8 +3,8 @@
 - Quand le tableau est classique, cela retourne un tableau
 
 2. 
-- Données dans l'url : $uri = $request->getUri();
-- Pour les données dans le corps de la requête : $method = $request->getMethod();
+- Données dans l'url : $app->request->get();
+- Pour les données dans le corps de la requête : $app->request->post();
 
 3.
 - Le code de retour de la réponse (200, 404, 401 …) : $response->withStatus(302);
