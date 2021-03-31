@@ -21,5 +21,9 @@ class Game extends \Illuminate\Database\Eloquent\Model
         return $this->belongsToMany ("bd\models\Company", "game_publishers", "game_id", "comp_id");
     }
 
+    public function platforms() {
+        return $this->belongsToMany ("bd\models\Platform", "game2platform", "game_id", "platform_id");
+    }
+
 
 }

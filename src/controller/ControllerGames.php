@@ -9,7 +9,7 @@ use bd\models\Game;
 use bd\models\Platform;
 use bd\models\Users;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use\Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 class ControllerGames
@@ -24,10 +24,23 @@ class ControllerGames
         try {
             $game=Game::where('id', '=', $args['id'])->firstOrFail();
         }catch (ModelNotFoundException $e){
-            return $response->withStatus(404);
+            return $response->withJson(["erreur" => $e], 404);
         }
 
-        $response->withHeader('Content-Type', 'application/json');
+        $platf = $game->platforms;
+        $rep=[];
+        foreach ($platf as $p){
+            $link=$this->container->router->pathFor('platformDescr', ['id' => $p->id]);
+            $rep[] = [
+                'platform' => array(
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'alias' => $p->alias,
+                    'abbreviation' => $p->abbreviation
+                ),
+                'links' => ['description' => ['href' => $link]]
+            ];
+        }
 
         return $response->withJson(
             array(
@@ -37,7 +50,8 @@ class ControllerGames
                     'alias' => $game->alias,
                     'deck' => $game->deck,
                     'description' => $game->description,
-                    'original_release_date' => $game->original_release_date
+                    'original_release_date' => $game->original_release_date,
+                    'platforms' => $rep
                 ),
                 'links' => array(
                     'comments' => ['href' => $this->container->router->pathFor('comments', ['id' => $game->id])],
@@ -71,13 +85,22 @@ class ControllerGames
             );
         }
 
-        $response->withHeader('Content-type', 'application/json');
         $next = $num+1;
         $prev = $num-1;
-        return $response->withJson(array('games' => $tab, 'links' => [
-            'prev' => ['href' => "/api/games?page=" .$prev ],
-            'next' => ['href' => "/api/games?page=" . $next ]
-        ]));
+        $link= $this->container->router->pathFor('games');
+
+        if($prev < 0){
+            return $response->withJson(array('games' => $tab, 'links' => [
+                'next' => ['href' => "$link?page=" . $next ]
+            ]));
+        } else {
+            return $response->withJson(array('games' => $tab, 'links' => [
+                'prev' => ['href' => "$link?page=" .$prev ],
+                'next' => ['href' => "$link?page=" . $next ]
+            ]));
+        }
+
+
     }
 
     public function gameComments(Request $request, Response $response, array $args){
@@ -89,53 +112,30 @@ class ControllerGames
                 'id' => $c->id,
                 'title' => $c->titre,
                 'text' => $c->contenu,
-                'date_created' => $c->created_at,//TODO
+                'date_created' => $c->created_at->format('Y-m-d'),
                 'name_user' => Users::where('id', '=', $c->user_id)->first()->nom
             ];
         }
 
-        $response->withHeader('Content-Type', 'application/json');
-
-        return $response->withJson($tab);
+        return $response->withJson(['comments' => $tab]);
     }
 
-    public function platformsCollection(Request $request, Response $response, array $args){
-        $num = $request->getQueryParam('page');
-
-        if (isset($num)){
-            $platf=Platform::skip(25*$num)->take(25)->get();
-        }else{
-            $platf=Platform::take(25)->get();
+    public function platform(Request $request, Response $response, array $args){
+        try {
+            $platform=Platform::where('id', '=', $args['id'])->firstOrFail();
+        }catch (ModelNotFoundException $e){
+            return $response->withJson(["erreur" => $e], 404);
         }
 
-        $tab=[];
-
-        foreach ($platf as $p){
-            $link = "";//$this->container->router->pathFor('descrPlatform', ['id' => $p->id]);TODO
-            $tab[]=array(
-                'platform' => array(
-                    'id' => $p->id,
-                    'name' => $p->name,
-                    'alias' => $p->alias,
-                    'abbreviation' => $p->abbreviation
-                ),
-                'links' => ['description' => ['href' => $link]]
-            );
-        }
-
-        $response->withHeader('Content-type', 'application/json');
-        $next = $num+1;
-        $prev = $num-1;
-
-        return $response->withJson(
-            array(
-                'games' => $tab,
-                'links' => [
-                    'prev' => ['href' => "/api/games?page=" .$prev ],
-                    'next' => ['href' => "/api/games?page=" . $next ]
-                ]
+        return array(
+            'platform' => array(
+                'id' => $platform->id,
+                'name' => $platform->name,
+                'alias' => $platform->alias,
+                'abbreviation' => $platform->abbreviation
             )
         );
+
     }
 
     public function gameCharacters(Request $request, Response $response, array $args){
@@ -143,7 +143,7 @@ class ControllerGames
 
         $tab['characters']=[];
         foreach ($perso as $p){
-            $link = "";//$this->container->router->pathFor('character', ['id' => $p->id]);TODO
+            $link = $this->container->router->pathFor('character', ['id' => $p->id]);
             $tab['characters'][]=[
                 'character' => [
                     'id' => $p->id,
@@ -153,12 +153,49 @@ class ControllerGames
             ];
         }
 
-        $response->withHeader('Content-Type', 'application/json');
-
         return $response->withJson($tab);
     }
 
     public function postGameComments(Request $request, Response $response, array $args){
-        filter_var($request->getParsedBody())
+        try {
+            $res = $request->getParsedBody();
+            $comment = new Commentary();
+            $comment->titre=filter_var($res['titre'], FILTER_SANITIZE_STRING);
+            $comment->contenu=filter_var($res['contenu'], FILTER_SANITIZE_STRING);
+            $comment->user_id=filter_var($res['user_id'],FILTER_SANITIZE_NUMBER_INT);
+            $comment->game_id=filter_var($res['game_id'], FILTER_SANITIZE_NUMBER_INT);
+            $comment->save();
+        } catch (\Exception $e){
+            return $response->withJson(['erreur' => $e], 500);
+        }
+
+        return $response->withJson($comment, 201)
+            ->withHeader('Location', $this->container->router->pathFor('comments', ['id' => $comment->id]));
+    }
+
+    public function platformDescr(Request $request, Response $response, array $args){
+        try {
+            $p = Platform::where('id', '=', $args['id'])->firstOrFail();
+        } catch (\Exception $e){
+            return $response->withJson(["erreur" => $e], 404);
+        }
+
+
+        return $response->withJson(['description' => $p->description]);
+    }
+
+    public function character(Request $request, Response $response, array $args){
+        try {
+            $c = Character::where('id', '=', $args['id'])->firstOrFail();
+        } catch (\Exception $e){
+            return $response->withJson(["erreur" => $e], 404);
+        }
+
+
+        return $response->withJson(['character' => [
+            'name' => $c->name,
+            'alias' => $c->alias,
+            'deck' => $c->deck
+        ]]);
     }
 }

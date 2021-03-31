@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-use\Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 $config = ['settings' => [
@@ -30,8 +30,16 @@ $app->post('/api/games/{id}/comments', \bd\controller\ControllerGames::class . '
 
 $app->get('/api/games/{id}', \bd\controller\ControllerGames::class . ':game')->setName('idGame');
 
-$app->get('/api/games', \bd\controller\ControllerGames::class . ':gamesCollection');
+$app->get('/api/games', \bd\controller\ControllerGames::class . ':gamesCollection')
+    ->setName('games');
 
-$app->get('/api/platforms', \bd\controller\ControllerGames::class . ':platformsCollection');
+$app->get('/api/platform/{id}', \bd\controller\ControllerGames::class . ':platform')
+    ->setName('platform');
+
+$app->get('/api/platform/{id}/description', \bd\controller\ControllerGames::class . ':platformDescr')
+    ->setName('platformDescr');
+
+$app->get('/api/character/{id}', \bd\controller\ControllerGames::class . ':character')
+    ->setName('character');
 
 $app->run();
